@@ -12,6 +12,8 @@ public class PlatformerAnimatorController : MonoBehaviour {
     public PlatformerController controller;
     public Transform renderTarget;
 
+    public float idleSpeedTolerance = 0.1f;
+
     public string idleTake = "idle";
     public string moveTake = "move";
     public string wallJumpTake = "walljump";
@@ -100,6 +102,7 @@ public class PlatformerAnimatorController : MonoBehaviour {
         if(controller == null || !string.IsNullOrEmpty(mOverrideTake)) return;
 
         bool left = mIsLeft;
+        string take = null;
 
         if(controller.isJumpWall) {
             if(anim) anim.Play(wallJumpTake);
@@ -107,30 +110,28 @@ public class PlatformerAnimatorController : MonoBehaviour {
             left = controller.localVelocity.x < 0.0f;
         }
         else if(controller.isWallStick) {
-            if(anim) anim.Play(wallStickTake);
+            take = wallStickTake;
 
             left = M8.MathUtil.CheckSide(controller.wallStickCollide.normal, controller.dirHolder.up) == M8.MathUtil.Side.Right;
 
         }
         else {
-            if(anim) {
-                if(controller.isGrounded) {
-                    if(controller.moveSide != 0.0f) {
-                        anim.Play(moveTake);
-                    }
-                    else {
-                        anim.Play(idleTake);
-                    }
+            if(controller.isGrounded) {
+                if(controller.moveSide != 0.0f) {
+                    take = moveTake;
                 }
                 else {
-                    if(controller.localVelocity.y <= 0.0f) {
-                        int ind = controller.jumpCounterCurrent > 0 ? controller.jumpCounterCurrent-1 : 0; if(ind >= downTakes.Length) ind = downTakes.Length - 1;
-                        anim.Play(downTakes[ind]);
-                    }
-                    else {
-                        int ind = controller.jumpCounterCurrent > 0 ? controller.jumpCounterCurrent-1 : 0; if(ind >= upTakes.Length) ind = upTakes.Length - 1;
-                        anim.Play(upTakes[ind]);
-                    }
+                    take = Mathf.Abs(controller.localVelocity.x) < idleSpeedTolerance ? idleTake : moveTake;
+                }
+            }
+            else {
+                if(controller.localVelocity.y <= 0.0f) {
+                    int ind = controller.jumpCounterCurrent > 0 ? controller.jumpCounterCurrent-1 : 0; if(ind >= downTakes.Length) ind = downTakes.Length - 1;
+                    take = downTakes[ind];
+                }
+                else {
+                    int ind = controller.jumpCounterCurrent > 0 ? controller.jumpCounterCurrent-1 : 0; if(ind >= upTakes.Length) ind = upTakes.Length - 1;
+                    take = upTakes[ind];
                 }
             }
 
@@ -141,6 +142,8 @@ public class PlatformerAnimatorController : MonoBehaviour {
 
         if(!mLockFacing)
             isLeft = left;
+
+        if(anim && !string.IsNullOrEmpty(take) && anim.currentPlayingTakeName != take) anim.Play(take);
 	}
 
     void OnTakeFinish(AnimatorData anim, AMTakeData take) {

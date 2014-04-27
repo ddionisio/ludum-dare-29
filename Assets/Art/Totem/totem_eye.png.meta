@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b6fba486de9cc0545acb9e281b065817
+guid: 8216f89a281e298409ebb533da2fe8df
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -33,7 +33,7 @@ TextureImporter:
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 7
+  alignment: 0
   spritePivot: {x: .5, y: .5}
   spritePixelsToUnits: 32
   alphaIsTransparency: 1
@@ -41,5 +41,5 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites: []
-  spritePackingTag: Player
+  spritePackingTag: PlanetObject
   userData: 
