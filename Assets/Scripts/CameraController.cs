@@ -16,6 +16,10 @@ public class CameraController : MonoBehaviour {
     private float mSwitchingCurTime;
     private Vector3 mCurVel;
 
+    private static CameraController mInstance;
+
+    public static CameraController instance { get { return mInstance; } }
+
     public Transform target {
         get { return mTarget; }
         set {
@@ -34,6 +38,14 @@ public class CameraController : MonoBehaviour {
             mTarget = value;
             mCurVel = Vector3.zero;
         }
+    }
+
+    void OnDestroy() {
+        mInstance = null;
+    }
+
+    void Awake() {
+        mInstance = this;
     }
 
     // Update is called once per frame

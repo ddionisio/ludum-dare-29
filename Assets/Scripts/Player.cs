@@ -8,8 +8,6 @@ public class Player : EntityBase {
     private PlatformerController mCtrl;
     private PlatformerAnimatorController mCtrlAnim;
     private PlayerStats mStats;
-    private Camera mCamera;
-    private CameraController mCameraCtrl;
     private bool mAllowPauseTime;
     private int mPauseCounter = 0;
 
@@ -112,9 +110,7 @@ public class Player : EntityBase {
         mCtrlAnim = GetComponent<PlatformerAnimatorController>();
         mCtrlAnim.takeFinishCallback += OnAnimCtrlEnd;
 
-        mCamera = Camera.main;
-        mCameraCtrl = mCamera.GetComponentInChildren<CameraController>();
-        mCameraCtrl.target = transform;
+        CameraController.instance.target = transform;
 
         mStats = GetComponent<PlayerStats>();
     }
